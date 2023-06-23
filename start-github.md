@@ -57,7 +57,7 @@ $ ls -a ~/.ssh
 
 На экране должны появиться два файла — один с расширением `.pub`, другой — без. Файл в `.pub` — публичный, им можно делиться с веб-сайтами или коллегами. Файл без расширения `.pub` — приватный. Ни в коем случае не передавайте его никому!  
 
-# Инструкция по связыванию SSH-ключа и GitHub-аккаунта
+# Связывание SSH-ключа и GitHub-аккаунта
 
 нужно распечатать файл на экран с помощью `cat ~/.ssh/id_rsa.pub` и скопировать его.
 
@@ -110,45 +110,30 @@ The authenticity of host 'github.com (140.82.121.4)' can't be established. ED255
 Это предупреждение сообщает, что вы никогда не соединялись с сервером GitHub. Поэтому Git не может гарантировать, что сервер является тем, за кого он себя выдаёт.
 Для подтверждения подлинности сервер генерирует и публикует ключи SHA256. Вы можете проверить ключи GitHub по этой ссылке. Если ключ в предупреждении совпадает с тем, что вы видите на сайте, значит, сервер является действительным. Введите yes, чтобы продолжить. Вы увидите приветствие на экране.
 
-## Если порт ssh у компа другой то:
 
-(Такими-же командами можно переключиться с SSH на URL)
-
-```bash
-# удаление уже добавленного пути репозитория
-$ git remote remove origin 
-# добавление нового пути
-$ git remote add origin ssh://git@github.com:22/miike71/go-training.git
-# добавление нового пути
-$ git push -u origin main
-```
-
-**Если при использовании команды**:
+## Отправка локального git на GitHub
 
 ```bash
-$ git push -u origin main
-```
-
-Возникает ошибка: `error: src refspec main does not match any`, то добавляем `README.md`, а потом `git commit`:
-
-```bash
-$ git add .
-$ git commit -m "added README.md"
-$ git branch -M main
-# и потом 
+# Выбираем название ветки
+git branch -M master
 # запускаум ssh-agent в фоновом режима
 $ eval "$(ssh-agent -s)"
 # добавляем отпечаток ключа в агент
 $ ssh-add ~/.ssh/github.com
-# отправка на GitHub
-$ git push -u origin main 
-# Если команда приведёт к ошибке, попробуйте заменить main на master.
+# добавляем `git-help.git`
+git remote add origin git@github.com:miike71/git-help.git
+# отправляем 
+git push -u origin master
 ```
 
-> **Внимание** В последствии молжно пушить без дополнительных параметров
+> **Внимание** В последствии, для ЭТОГО репозитория, молжно делать пуши без дополнительных параметров
 
 ```bash
+# ДЛЯ РЕПОЗИТОРИЯ git-help.git
+$ cd path/to/git-help
+# подготавливаем файлы для `git commit`
 $ git add .
+# фиксируем изменения
 $ git commit -m "коментарий"
 # запускаум ssh-agent в фоновом режима
 $ eval "$(ssh-agent -s)"
@@ -157,4 +142,41 @@ $ ssh-add ~/.ssh/github.com
 # и потом отправка на GitHub
 $ git push
 ```
+
+
+### Если ssh порт у компа другой (отличается от 22) то:
+
+(Такими-же командами можно переключиться с SSH на URL)
+
+```bash
+# удаление уже добавленного пути репозитория
+$ git remote remove origin 
+# добавление нового пути
+$ git remote add origin ssh://git@github.com:22/miike71/git-help.git
+# добавление нового пути
+$ git push -u origin master
+```
+
+**Если при использовании команды**:
+
+```bash
+$ git push -u origin master
+```
+
+Возникает ошибка: `error: src refspec main does not match any`, то добавляем `README.md`, а потом `git commit`:
+
+```bash
+$ git add .
+$ git commit -m "added README.md"
+$ git branch -M master
+# и потом 
+# запускаум ssh-agent в фоновом режима
+$ eval "$(ssh-agent -s)"
+# добавляем отпечаток ключа в агент
+$ ssh-add ~/.ssh/github.com
+# отправка на GitHub
+$ git push -u origin master
+# Если команда приведёт к ошибке, попробуйте заменить main на master.
+```
+
 
